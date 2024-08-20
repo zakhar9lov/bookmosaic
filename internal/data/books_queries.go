@@ -7,10 +7,9 @@ import (
 	"bookmosaic/internal/models"
 )
 
-// Получить n книг(кратких структур) относительно смещения
+// Get books with offset
 func (db *DB) GetBooks(ctx context.Context, limit, offset int) ([]models.SummaryBook, error) {
 	summBooks := make([]models.SummaryBook, 0, limit)
-	//var err error
 	rows, err := db.DB.Query(ctx, "SELECT id, title, cover FROM books ORDER BY id LIMIT $1 OFFSET $2", limit, offset)
 
 	if err != nil {
@@ -43,7 +42,7 @@ func (db *DB) GetBooks(ctx context.Context, limit, offset int) ([]models.Summary
 	return summBooks, nil
 }
 
-// Получить книгу по ID
+// Get book by id
 func (db *DB) GetBookByID(ctx context.Context, id int) (models.Book, error) {
 	book := models.Book{}
 
@@ -65,7 +64,7 @@ func (db *DB) GetBookByID(ctx context.Context, id int) (models.Book, error) {
 	return book, nil
 }
 
-// Удалить книгу по ID
+// Delete book by ID
 func (db *DB) DeleteBookByID(ctx context.Context, id int) error {
 	tag, err := db.DB.Exec(ctx, "DELETE FROM books WHERE id = $1", id)
 
@@ -80,7 +79,7 @@ func (db *DB) DeleteBookByID(ctx context.Context, id int) error {
 	return nil
 }
 
-// Обновить информацию о книге
+// Update book data
 func (db *DB) UpdateBookByID(ctx context.Context, id int, upd models.Book) error {
 	tag, err := db.DB.Exec(
 		ctx,
@@ -99,7 +98,7 @@ func (db *DB) UpdateBookByID(ctx context.Context, id int, upd models.Book) error
 	return nil
 }
 
-// Добавить новую книгу
+// Add new book
 func (db *DB) AddNewBook(ctx context.Context, book models.Book) error {
 	_, err := db.DB.Exec(
 		ctx, "INSERT INTO books (isbn, title, author, year, summary, cover) VALUES ($1, $2, $3, $4, $5, $6)",
